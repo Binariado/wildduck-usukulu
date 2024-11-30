@@ -54,16 +54,28 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - 
+      name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - 
+        name: Prepare tags
+          id: prepare-tags
+          run: echo "tags=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       -
         name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: ./docker-images/haraka
           file: ./docker-images/haraka/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: nodemailer/haraka-wildduck:latest,nodemailer/haraka-wildduck:${{steps.get_version.outputs.VERSION}}
+          tags: ${{ env.tags }}/haraka-wildduck:latest,${{ env.tags }}/haraka-wildduck:${{steps.get_version.outputs.VERSION}}
           build-args: |
             version=${{steps.get_version.outputs.VERSION}}
       -
