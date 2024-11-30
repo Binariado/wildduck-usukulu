@@ -1,24 +1,38 @@
-FROM node:lts-alpine as builder
+# Builder
+FROM node:lts-alpine AS builder
 
-ARG version=2.8.27
-ARG plugin_version=1.29.9
+ARG version=3.0.5
+ARG haraka_plugin_version=5.8.15
 
-RUN apk add --no-cache git python make g++
+# Instalar dependencias necesarias
+RUN apk update && apk add --no-cache git python3 make g++
+RUN apk add npm
 
+# Directorio de trabajo
 WORKDIR /app
 
-RUN git clone https://github.com/haraka/Haraka.git ./ --branch ${version}
-RUN npm install --production
-RUN npm install haraka-plugin-wildduck@${plugin_version}
+# Clonar el repositorio con la versión específica
+RUN echo "Cloning Haraka version: ${version}" && \
+    git clone https://github.com/haraka/Haraka.git ./ --branch v"${version}" --depth 1
 
+# Instalar dependencias del proyecto
+RUN npm install && npm ci --omit=dev
+RUN npm install haraka-plugin-wildduck@${haraka_plugin_version}
 
-FROM node:lts-alpine as app
+# App
+FROM node:lts-alpine AS app
 
-ENV NODE_ENV production
+# Definir variable de entorno
+ENV NODE_ENV=production
 
+# Instalar tini
 RUN apk add --no-cache tini
 
+# Configurar directorio de trabajo
 WORKDIR /app
+
+# Copiar la app desde el builder
 COPY --from=builder /app /app
 
+# Configurar entrada
 ENTRYPOINT ["/sbin/tini", "--", "node", "haraka.js"]
