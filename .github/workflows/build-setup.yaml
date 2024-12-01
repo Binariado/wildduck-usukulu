@@ -4,9 +4,21 @@ on:
     tags:
       - 'setup-v[0-9]+.[0-9]+.[0-9]+*'
 
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
     steps:
       - 
         name: Get version from tag
@@ -42,6 +54,8 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
       - 
         name: Extract Docker metadata
         id: meta
@@ -62,6 +76,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.tags }}/wildduck-dockerized-setup:latest,${{ env.tags }}/wildduck-dockerized-setup:${{steps.get_version.outputs.VERSION}}
+          build-args: |
+            version=${{steps.get_version.outputs.VERSION}}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
