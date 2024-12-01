@@ -57,15 +57,15 @@ jobs:
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - 
-      name: Extract Docker metadata
+        name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - 
         name: Prepare tags
-          id: prepare-tags
-          run: echo "tags=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        id: prepare-tags
+        run: echo "tags=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       -
         name: Build and push
         id: docker_build
