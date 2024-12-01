@@ -75,9 +75,9 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.tags }}/wildduck-dockerized-setup:latest,${{ env.tags }}/wildduck-dockerized-setup:${{steps.get_version.outputs.VERSION}}
+          tags: ${{ env.tags }}/wildduck-dockerized-setup:latest,${{ env.tags }}/wildduck-dockerized-setup:${{ env.VERSION }}
           build-args: |
-            version=${{steps.get_version.outputs.VERSION}}
+            version=${{ env.VERSION }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
