@@ -1,6 +1,7 @@
 FROM node:lts-alpine as builder
 
-ARG version=2.4.2
+ARG version=3.10.0
+ARG plugin_version=1.3.15
 
 RUN apk add --no-cache git python make g++
 
@@ -9,8 +10,8 @@ WORKDIR /app
 RUN git clone https://github.com/zone-eu/zone-mta-template ./
 
 RUN npm install zone-mta@${version}
-RUN npm install --production
-RUN npm install zonemta-wildduck
+RUN npm install && npm ci --omit=dev
+RUN npm install zonemta-wildduck@${plugin_version}
 
 
 FROM node:lts-alpine as app
