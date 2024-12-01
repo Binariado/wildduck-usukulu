@@ -1,4 +1,4 @@
-FROM node:lts-alpine as builder
+FROM node:lts-alpine AS builder
 
 ARG version=3.10.0
 ARG plugin_version=1.3.15
@@ -13,10 +13,9 @@ RUN npm install zone-mta@${version}
 RUN npm install && npm ci --omit=dev
 RUN npm install zonemta-wildduck@${plugin_version}
 
+FROM node:lts-alpine AS app
 
-FROM node:lts-alpine as app
-
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN apk add --no-cache tini
 
