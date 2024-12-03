@@ -2,7 +2,8 @@
 FROM node:lts-alpine AS builder
 
 ARG version=3.0.5
-ARG haraka_plugin_version=5.8.15
+ARG plugin_wildduck_version=5.8.15
+ARG plugin_headers_version=1.0.4
 
 # Instalar dependencias necesarias
 RUN apk update && apk add --no-cache git python3 make g++
@@ -17,7 +18,8 @@ RUN echo "Cloning Haraka version: ${version}" && \
 
 # Instalar dependencias del proyecto
 RUN npm install && npm ci --omit=dev
-RUN npm install haraka-plugin-wildduck@${haraka_plugin_version}
+RUN npm install haraka-plugin-wildduck@${plugin_wildduck_version} \ 
+    haraka-plugin-headers@${plugin_headers_version}
 
 # App
 FROM node:lts-alpine AS app
