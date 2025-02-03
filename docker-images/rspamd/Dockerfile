@@ -13,5 +13,5 @@ RUN apk add --no-cache \
 
 EXPOSE 11332/tcp 11333/tcp 11334/tcp
 
-ENTRYPOINT ["/sbin/tini", "--", "/usr/sbin/rspamd"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/rspamd"]
 CMD ["-i", "-f"]
