@@ -1,8 +1,4 @@
-version: "3.8"
-volumes:
-  mongo:
-  redis:
-  traefik:
+
 services: 
   wildduck:
     image: nodemailer/wildduck
@@ -127,3 +123,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik:/data
+
+volumes:
+  mongo:
+  redis:
+  traefik:

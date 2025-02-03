@@ -1,15 +1,15 @@
 
 FROM alpine:3
 
-ARG version=3.8.4
+ARG version=3.10.2
 
 RUN apk add --no-cache tini
 
 RUN apk add --no-cache \
-    rspamd=${version}-r0 \
-    rspamd-controller=${version}-r0 \
-    rspamd-proxy=${version}-r0 \
-    rspamd-fuzzy=${version}-r0 ca-certificates curl
+    rspamd=${version}-r1 \
+    rspamd-controller=${version}-r1 \
+    rspamd-proxy=${version}-r1 \
+    rspamd-fuzzy=${version}-r1 ca-certificates curl
 
 EXPOSE 11332/tcp 11333/tcp 11334/tcp
 
