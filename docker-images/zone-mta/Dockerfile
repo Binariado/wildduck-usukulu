@@ -1,7 +1,7 @@
 FROM node:lts-alpine AS builder
 
 ARG version=3.10.0
-ARG plugin_version=1.3.15
+ARG plugin_version=1.32.18
 
 RUN apk update && apk add --no-cache git python3 make g++
 
